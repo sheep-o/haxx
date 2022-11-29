@@ -28,14 +28,13 @@ extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam
 WNDPROC oWndProc;
 LRESULT __stdcall WndProc(const HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 
-    if (true && ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam))
+    if (ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam))
         return true;
 
     return CallWindowProc(oWndProc, hWnd, uMsg, wParam, lParam);
 }
 
 D3DCOLOR color = D3DCOLOR_ARGB(255, 255, 0, 0);
-int pPadding = 1;
 
 void Aimbot(IDirect3DDevice9* pDevice) {
 
@@ -64,25 +63,7 @@ void ESP(IDirect3DDevice9* pDevice) {
 
                 if (sPos.x >= 0 && sPos.y >= 0 && sPos.z >= 0 && sPos.x <= 1920 && sPos.y <= 1080) {
                     DWORD boneMatrix = *(DWORD*)(entity + Offsets::m_dwBoneMatrix);
-//                    Graphics::Vec3 wOldPos;
-//                    Graphics::Vec3 bonePos;
-//                    wOldPos.x = *(float*)(boneMatrix + 0x30 * 0 + 0x0C);
-//                    wOldPos.y = *(float*)(boneMatrix + 0x30 * 0 + 0x1C);
-//                    wOldPos.z = *(float*)(boneMatrix + 0x30 * 0 + 0x2C);
-//                    Graphics::Vec3 oldPos = Graphics::WorldToScreen(ViewMatrix, 1920, 1080, wOldPos);
-//                    for (int j = 1; j < 85; j++) {
-//                        if (j == 1 || j == 2) continue;
-//                        else {
-//                            bonePos.x = *(float*)(boneMatrix + 0x30 * j + 0x0C);
-//                            bonePos.y = *(float*)(boneMatrix + 0x30 * j + 0x1C);
-//                            bonePos.z = *(float*)(boneMatrix + 0x30 * j + 0x2C);
-//                            Graphics::Vec3 sBonePos = Graphics::WorldToScreen(ViewMatrix, 1920, 1080, bonePos);
-//                            Graphics::DrawLine(pDevice, oldPos.x, oldPos.y, sBonePos.x, sBonePos.y);
-//                            oldPos = sBonePos;
-//                            //DrawMessage(m_font, sBonePos.x, sBonePos.y, 255, 255, 0, 0, "x");
-//                        }
-//                    }
-//---------------------------------------------------------------------------------------------------------------------------
+
                     Graphics::Vec3 bonePos;
                     bonePos.x = *(float*)(boneMatrix + 0x30 * 8 + 0x0C);
                     bonePos.y = *(float*)(boneMatrix + 0x30 * 8 + 0x1C);
@@ -92,8 +73,8 @@ void ESP(IDirect3DDevice9* pDevice) {
                     //DrawMessage(m_font, sBonePos.x, sBonePos.y, 255, 255, 0, 0, "x");
 
                     float height = std::abs(sHead.y - sPos.y);
-                    float width = height / 2 + pPadding;
-                    float wh = width / 2 + pPadding;
+                    float width = height / 2;
+                    float wh = width / 2;
                     // draw box
                     Graphics::DrawLine(pDevice,sPos.x - wh, sPos.y, sPos.x + wh, sPos.y, color); //bottom
                     Graphics::DrawLine(pDevice,sPos.x - wh, sHead.y, sPos.x + wh, sHead.y, color); //top
@@ -123,7 +104,7 @@ void ESP2(IDirect3DDevice9* pDevice) {
 
     auto pViewMatrix = (float*)(moduleBase + Offsets::dwViewMatrix);
     memcpy(ViewMatrix, pViewMatrix, 64);
-`
+
     for (int i = 0; i < 32; i++) {
         Entity* ent = (Entity*)entityList->GetClientEntity(i);
 
